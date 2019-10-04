@@ -8,6 +8,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using DatabaseBackup;
 
 namespace SqlBackup
 {
@@ -23,10 +24,11 @@ namespace SqlBackup
         
         protected override void OnStart(string[] args)
         {
-            tmr = new Timer(60 * 1000);
+            tmr = new Timer(2 * 1000);
             tmr.Elapsed += Tmr_Elapsed;
-            StartTime = DateTime.Now.Date + Properties.Settings.Default.StartDateTime;
+            StartTime = DateTime.Now.Date.Add(Properties.Settings.Default.StartDateTime);
             tmr.Start();
+
         }
 
         protected override void OnStop()
@@ -34,9 +36,17 @@ namespace SqlBackup
             tmr.Stop();
         }
 
-        private void Tmr_Elapsed(object sender, ElapsedEventArgs e)
+        private async void Tmr_Elapsed(object sender, ElapsedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (StartTime < DateTime.Now)
+            {
+                StartTime = DateTime.Now.Add(Properties.Settings.Default.ExecuteEveryTime);
+                LogsManager.DefaultInstance.LogMsg(LogsManager.LogType.Debug, $"Next Exec: {StartTime}", typeof(BackupSrv));
+                DBBackup bakSrv = new DBBackup(Properties.Settings.Default.ConnectionString, Properties.Settings.Default.BackupPath);
+                LogsManager.DefaultInstance.LogMsg(LogsManager.LogType.Debug, $"Exec Backup ...", typeof(BackupSrv));
+                await bakSrv.CreateBackupAsync();
+            }
+            
         }
     }
 }

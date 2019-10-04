@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
-            this.ServiceName = "BackupSrv";
+            // 
+            // BackupSrv
+            // 
+            this.ServiceName = "SqlBackupSrv";
+
         }
 
         #endregion
