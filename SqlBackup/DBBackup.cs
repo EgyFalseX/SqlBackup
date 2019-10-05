@@ -22,8 +22,8 @@ namespace DatabaseBackup
         public async Task<bool> CreateBackupAsync()
         {
             SqlConnectionStringBuilder sqlConStrBuilder = new SqlConnectionStringBuilder(ConnectionString);
-            string backupFileName = $"{BackupPath}{sqlConStrBuilder.InitialCatalog}-{DateTime.Now:yyyyMMddmmss}.bak";
-            string compressFile = $"{BackupPath}{sqlConStrBuilder.InitialCatalog}-{DateTime.Now:yyyyMMddmmss}.7z";
+            string backupFileName = $"{BackupPath}{sqlConStrBuilder.InitialCatalog}-{DateTime.Now:yyyyMMddhhmmss}.bak";
+            string compressFile = $"{BackupPath}{sqlConStrBuilder.InitialCatalog}-{DateTime.Now:yyyyMMddhhmmss}.7z";
             try
             {
                 using (var connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
@@ -32,6 +32,7 @@ namespace DatabaseBackup
 
                     using (var command = new SqlCommand(query, connection))
                     {
+                        command.CommandTimeout = int.MaxValue;
                         connection.Open();
                         command.ExecuteNonQuery();
                         LogsManager.DefaultInstance.LogMsg(LogsManager.LogType.Debug, $"Backup completed ...", typeof(DBBackup));
