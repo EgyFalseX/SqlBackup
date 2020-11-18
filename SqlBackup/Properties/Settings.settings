@@ -19,5 +19,8 @@
     <Setting Name="ExecuteEveryTime" Type="System.TimeSpan" Scope="User">
       <Value Profile="(Default)">23:59:59</Value>
     </Setting>
+    <Setting Name="ConnectionString2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=.\SQL16;Initial Catalog=skolife;Persist Security Info=True;User ID=SA;Password=2491983</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

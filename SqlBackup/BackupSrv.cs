@@ -45,6 +45,15 @@ namespace SqlBackup
                 DBBackup bakSrv = new DBBackup(Properties.Settings.Default.ConnectionString, Properties.Settings.Default.BackupPath);
                 LogsManager.DefaultInstance.LogMsg(LogsManager.LogType.Debug, $"Exec Backup ...", typeof(BackupSrv));
                 await bakSrv.CreateBackupAsync();
+
+                if (!string.IsNullOrEmpty(Properties.Settings.Default.ConnectionString2))
+                {
+                    LogsManager.DefaultInstance.LogMsg(LogsManager.LogType.Debug, $"Next Exec: {StartTime}", typeof(BackupSrv));
+                    DBBackup bakSrv2 = new DBBackup(Properties.Settings.Default.ConnectionString2, Properties.Settings.Default.BackupPath);
+                    LogsManager.DefaultInstance.LogMsg(LogsManager.LogType.Debug, $"Exec Backup ...", typeof(BackupSrv));
+                    await bakSrv2.CreateBackupAsync();
+                }
+
             }
             
         }
