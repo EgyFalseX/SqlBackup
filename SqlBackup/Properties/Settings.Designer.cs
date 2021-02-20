@@ -82,5 +82,29 @@ namespace SqlBackup.Properties {
                 this["ConnectionString2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("c:\\sqlbackupfiles\\")]
+        public string ArchivePath {
+            get {
+                return ((string)(this["ArchivePath"]));
+            }
+            set {
+                this["ArchivePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int MaxNumOfBackup {
+            get {
+                return ((int)(this["MaxNumOfBackup"]));
+            }
+            set {
+                this["MaxNumOfBackup"] = value;
+            }
+        }
     }
 }

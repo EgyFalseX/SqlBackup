@@ -11,19 +11,23 @@ namespace DatabaseBackup
 {
     public class DBBackup
     {
-        public DBBackup(string connectionString, string backupPath)
+        public DBBackup(string connectionString, string backupPath, string compressPath, int maxNumOfBackup)
         {
             ConnectionString = connectionString;
             BackupPath = backupPath;
+            CompressPath = compressPath;
+            MaxNumOfBackup = maxNumOfBackup;
         }
         public string ConnectionString { get; set; }
         public string BackupPath { get; set; }
+        public string CompressPath { get; set; }
+        public int MaxNumOfBackup { get; set; }
 
         public async Task<bool> CreateBackupAsync()
         {
             SqlConnectionStringBuilder sqlConStrBuilder = new SqlConnectionStringBuilder(ConnectionString);
             string backupFileName = $"{BackupPath}{sqlConStrBuilder.InitialCatalog}-{DateTime.Now:yyyyMMddhhmmss}.bak";
-            string compressFile = $"{BackupPath}{sqlConStrBuilder.InitialCatalog}-{DateTime.Now:yyyyMMddhhmmss}.7z";
+            string compressFile = $"{CompressPath}{sqlConStrBuilder.InitialCatalog}-{DateTime.Now:yyyyMMddhhmmss}.7z";
             try
             {
                 using (var connection = new SqlConnection(sqlConStrBuilder.ConnectionString))
@@ -43,6 +47,8 @@ namespace DatabaseBackup
                             File.Delete(backupFileName);
                             LogsManager.DefaultInstance.LogMsg(LogsManager.LogType.Debug, $"Backup file deleted ...", typeof(DBBackup));
                         }
+
+                        DeleteOutdatedfiles();
                         return true;
                     }
                 }
@@ -58,6 +64,26 @@ namespace DatabaseBackup
             {
              return true;   
             });
+        }
+
+        private void DeleteOutdatedfiles()
+        {
+            string[] files = Directory.GetFiles(CompressPath, "*.7z");
+            Array.Sort(files, StringComparer.InvariantCulture);
+            if (files.Length < MaxNumOfBackup)
+                return;
+
+            for (int i = files.Length - MaxNumOfBackup; i >= 0; i--)
+            {
+                try
+                {
+                    File.Delete(files[i]);
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
         }
     }
 }

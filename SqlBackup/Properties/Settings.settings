@@ -22,5 +22,11 @@
     <Setting Name="ConnectionString2" Type="System.String" Scope="User">
       <Value Profile="(Default)">Data Source=.\SQL16;Initial Catalog=skolife;Persist Security Info=True;User ID=SA;Password=2491983</Value>
     </Setting>
+    <Setting Name="ArchivePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">c:\sqlbackupfiles\</Value>
+    </Setting>
+    <Setting Name="MaxNumOfBackup" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
